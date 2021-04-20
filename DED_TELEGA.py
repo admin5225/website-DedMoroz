@@ -1,22 +1,29 @@
 import datetime
 import random
-
+import telebot
 from tok import TOKEN
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.ext import CommandHandler
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
+from images.randomIMAGE import img
+from glob import glob
 
+tb = telebot.TeleBot(TOKEN)
 due = 0
+flag = 0
+total = 0
 reply_keyboard = [['/info'],
                   ['/website'],
-                  ['/game_quiz']]
+                  ['/game_quiz'], ['/add_functions']]
 communication = [['/contacts'], ['/back']]
 main_answer = [['/yes'], ['/no']]
+addFunction = [['/christmas_image'], ['/back']]
 reply_close_timer = [['/close']]
 choicer = [['/1'], ['/2'], ['/3'], ['/4'], ['/main_window']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
+markupFUNC = ReplyKeyboardMarkup(addFunction, one_time_keyboard=False)
 markup_choice = ReplyKeyboardMarkup(choicer, one_time_keyboard=False)
 markup2 = ReplyKeyboardMarkup(communication, one_time_keyboard=False)
 markup3 = ReplyKeyboardMarkup(main_answer, one_time_keyboard=False)
@@ -90,7 +97,24 @@ def website(update, context):
     update.message.reply_text('https://slavina-flask-proga.herokuapp.com/', reply_markup=markup)
 
 
+def add_functions(update, context):
+    update.message.reply_text('1)Рандомная фотография с Рождеством!', reply_markup=markupFUNC)
+
+
+def christmas_image(update, context):
+    photo = random.choice(img)
+    tb.send_photo(update.message.chat_id,
+                  photo)
+
+
 def contacts(update, context):
+    photo = open('images/1.jpg', 'rb')
+    photo = random.choice(img)
+    '''photo = open('https://i.pinimg.com/originals/57/f3/23/57f3234f65f0f327e7b86860c5cebd71.jpg')'''
+    tb.send_photo(update.message.chat_id,
+                  photo)
+    '''file_id = 'AAAaaaZZZzzz'
+    tb.send_photo(update.message.chat_id, file_id)'''
     update.message.reply_text(
         f"@slaav1k")
 
@@ -101,8 +125,10 @@ def game_quiz(update, context):
 
 
 def yes(update, context):
+    global flag
+    flag = 1
     update.message.reply_text(
-        f"Тогда мы НАЧНАЕМ!\nГде живет дед мороз?\n1) На северном полюсе.\n2) На южном полюсе.\n 3) В Крыму!\n4) В "
+        f"Тогда мы НАЧНАЕМ!\nГде живет дед мороз?\n1) На северном полюсе.\n2) На южном полюсе.\n3) В Крыму!\n4) В "
         f"Солотче!", reply_markup=markup_choice)
 
 
@@ -115,9 +141,131 @@ def no(update, context):
     update.message.reply_text("Телефон: +7(495)776-3030")
 
 
-def site(update, context):
-    update.message.reply_text(
-        "Сайт: http://www.yandex.ru/company")
+def first(update, context):
+    global flag, total
+    if flag == 1:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКак называется праздник, на который приходит Дед Мороз?\n1) Пасха.\n2) День знаний."
+            "\n3) Новый Год.\n4) Масленица.", reply_markup=markup_choice)
+    elif flag == 5:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nЧто на ногах у Деда Мороза?\n1) Унты.\n2) Валенки."
+            "\n3) Сапоги.\n4) Черевички.", reply_markup=markup_choice)
+    elif flag == 13:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nУ представителей какого народа под Новый год принято вспоминать о совершенных грехах и давать "
+            "обещание искупить их новыми делами в Новом году?\n1) Евреи.\n2) Aфганцы. "
+            "\n3) Греки.\n4) Японцы.", reply_markup=markup_choice)
+    elif flag == 14:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКитайцы считают, что первый день наступившего года окутан злыми духами, которых необходимо "
+            "отпугнуть. Чем китайцы их отпугивают?\n1) Рисом.\n2) Чаем. "
+            "\n3) Петардами.\n4) Волшебными словами.", reply_markup=markup_choice)
+    else:
+        update.message.reply_text(
+            f"ТЫ не угадал! {total}")
+
+
+def second(update, context):
+    global flag, total
+    if flag == 4:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВокруг чего Дед Мороз, Снегурочка и дети водят хоровод?\n1) Вокруг елки.\n2) Вокруг пальмы."
+            "\n3) Вокруг березы.\n4) Вокруг дуба.", reply_markup=markup_choice)
+    elif flag == 6:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВ какой стране дети и взрослые находят новогодние подарки на подоконнике?\n1) В Польше.\n2) В "
+            "Германии. "
+            "\n3) В Америке.\n4) В Китае.", reply_markup=markup_choice)
+    elif flag == 7:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВ Сколько шуб у Деда Мороза?\n1) 1.\n2) 2"
+            ""
+            "\n3) 3.\n4) 4.", reply_markup=markup_choice)
+    elif flag == 9:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nЧто символизирует тройка лошадей?\n1) Любовь к троице.\n2) Счастье, радость и любовь."
+            "\n3) Количество зимних праздников.\n4) Зимние месяца.", reply_markup=markup_choice)
+    elif flag == 11:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nПо указу какого царя датой празднования Нового года на Руси стало 1 января?\n1) Ивана "
+            "Грозного.\n2) "
+            "Александра I. 0"
+            "\n3) Петра I.\n4) Александра II.", reply_markup=markup_choice)
+    elif flag == 15:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВ каком городе получил прописку российский Дед Мороз?\n1) Новгород. "
+            "\n2) "
+            "Тула. 0"
+            "\n3) Великий Устюг.\n4) Оренбург.", reply_markup=markup_choice)
+    else:
+        update.message.reply_text(
+            f"ТЫ не угадал! {total}")
+
+
+def third(update, context):
+    global flag, total
+    if flag == 2:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nЧто спрятано в мешке у Деда Мороза?\n1) Гранаты.\n2) Фрукты."
+            "\n3) Спорт инвентарь.\n4) Подарки.", reply_markup=markup_choice)
+    elif flag == 8:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nСколько лошадей запрягает в сани Дед Мороз?\n1) Двух.\n2) Трех."
+            "\n3) Четырех.\n4) Семерых.", reply_markup=markup_choice)
+    elif flag == 12:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВ какой стране в XVI веке появилась первая елочная игрушка?\n1) Саксония.\n2) Австралия."
+            "\n3) Богемия.\n4) Германия.", reply_markup=markup_choice)
+    else:
+        update.message.reply_text(
+            f"ТЫ не угадал! {total}")
+
+
+def fourth(update, context):
+    global flag, total
+    if flag == 3:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКак зовут внучку Деда Мороза?\n1) Дюймовочка.\n2) Снегурочка."
+            "\n3) Несмеяна.\n4) Мария Васильевна.")
+    elif flag == 10:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКак величали сурового предшественника современного русского Деда Мороза?\n1) Дед Колотун.\n2) "
+            "Дед Трескун. "
+            "\n3) Дед Вьюговей.\n4) Дед Иван.", reply_markup=markup_choice)
+    else:
+        update.message.reply_text(
+            f"ТЫ не угадал! {total}")
 
 
 def time(update, context):
@@ -161,10 +309,15 @@ def main():
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("contacts", contacts))
     dp.add_handler(CommandHandler("game_quiz", game_quiz))
+    dp.add_handler(CommandHandler("add_functions", add_functions))
+    dp.add_handler(CommandHandler("christmas_image", christmas_image))
     dp.add_handler(CommandHandler("yes", yes))
     dp.add_handler(CommandHandler("no", start))
-    dp.add_handler(CommandHandler("site", site))
-    dp.add_handler(CommandHandler("close", unset_timer))
+    dp.add_handler(CommandHandler("1", first))
+    dp.add_handler(CommandHandler("2", second))
+    dp.add_handler(CommandHandler("3", third))
+    dp.add_handler(CommandHandler("4", fourth))
+    dp.add_handler(CommandHandler("main_window", start))
     dp.add_handler(CommandHandler("close_keyboard", close_keyboard))
     dp.add_handler(CommandHandler("set_time", set_timer,
                                   pass_args=True,
