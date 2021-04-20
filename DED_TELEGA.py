@@ -71,7 +71,6 @@ def set_timer(update, context):
 
 def task(context):
     global due
-    """Выводит сообщение"""
     job = context.job
     context.bot.send_message(job.context, text=f'Истекло {due} секунд!', reply_markup=markup3)
 
