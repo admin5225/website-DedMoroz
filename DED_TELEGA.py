@@ -8,7 +8,8 @@ from telegram.ext import CommandHandler
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
 from images.randomIMAGE import img
-from glob import glob
+from translate import Translator
+import requests
 
 tb = telebot.TeleBot(TOKEN)
 due = 0
@@ -17,9 +18,9 @@ total = 0
 reply_keyboard = [['/info'],
                   ['/website'],
                   ['/game_quiz'], ['/add_functions']]
-communication = [['/contacts'], ['/back']]
+communication = [['/contacts'], ['/download_game'], ['/back']]
 main_answer = [['/yes'], ['/no']]
-addFunction = [['/christmas_image'], ['/back']]
+addFunction = [['/christmas_image'], ['/advice'], ['/back']]
 reply_close_timer = [['/close']]
 choicer = [['/1'], ['/2'], ['/3'], ['/4'], ['/main_window']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
@@ -89,16 +90,36 @@ def unset_timer(update, context):
     update.message.reply_text(text, reply_markup=markup3)
 
 
+def get_advice(update, context):
+    response = requests.get('https://api.adviceslip.com/advice')
+    data = response.json()
+    text = data['slip']['advice']
+
+    translator = Translator(to_lang="RU")
+    translation = translator.translate(text)
+    if 'WARNING' in translation:
+        update.message.reply_text(text,
+                                  reply_markup=markupFUNC)
+    else:
+        update.message.reply_text(translation,
+                                  reply_markup=markupFUNC)
+
+
 def info(update, context):
     update.message.reply_text('ИГРА ГОДА 2021!', reply_markup=markup2)
 
 
+def download_game(update, context):
+    update.message.reply_text('https://clck.ru/UQido')
+
+
 def website(update, context):
-    update.message.reply_text('https://slavina-flask-proga.herokuapp.com/', reply_markup=markup)
+    update.message.reply_text('https://slavina-flask-proga.herokuapp.com/\n https://clck.ru/UQido', reply_markup=markup)
 
 
 def add_functions(update, context):
-    update.message.reply_text('1)Рандомная фотография с Рождеством!', reply_markup=markupFUNC)
+    update.message.reply_text('1)Рандомная фотография с Рождеством!\n2)Рандомный совет на день!',
+                              reply_markup=markupFUNC)
 
 
 def christmas_image(update, context):
@@ -108,13 +129,9 @@ def christmas_image(update, context):
 
 
 def contacts(update, context):
-    photo = open('images/1.jpg', 'rb')
-    photo = random.choice(img)
-    '''photo = open('https://i.pinimg.com/originals/57/f3/23/57f3234f65f0f327e7b86860c5cebd71.jpg')'''
+    photo = 'https://i.pinimg.com/originals/d0/8f/0a/d08f0a9a93af07aa14a710fb3bc92f4d.jpg'
     tb.send_photo(update.message.chat_id,
                   photo)
-    '''file_id = 'AAAaaaZZZzzz'
-    tb.send_photo(update.message.chat_id, file_id)'''
     update.message.reply_text(
         f"@slaav1k")
 
@@ -310,6 +327,8 @@ def main():
     dp.add_handler(CommandHandler("contacts", contacts))
     dp.add_handler(CommandHandler("game_quiz", game_quiz))
     dp.add_handler(CommandHandler("add_functions", add_functions))
+    dp.add_handler(CommandHandler("advice", get_advice))
+    dp.add_handler(CommandHandler("download_game", download_game))
     dp.add_handler(CommandHandler("christmas_image", christmas_image))
     dp.add_handler(CommandHandler("yes", yes))
     dp.add_handler(CommandHandler("no", start))
