@@ -8,6 +8,7 @@ from telegram.ext import CommandHandler
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
 from images.randomIMAGE import img
+from music import dt
 from translate import Translator
 import requests
 
@@ -20,7 +21,7 @@ reply_keyboard = [['/info'],
                   ['/game_quiz'], ['/add_functions']]
 communication = [['/contacts'], ['/download_game'], ['/back']]
 main_answer = [['/yes'], ['/no']]
-addFunction = [['/christmas_image'], ['/advice'], ['/back']]
+addFunction = [['/christmas_image'], ['/christmas_music'], ['/advice'], ['/back']]
 reply_close_timer = [['/close']]
 choicer = [['/1'], ['/2'], ['/3'], ['/4'], ['/main_window']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
@@ -114,7 +115,7 @@ def download_game(update, context):
 
 
 def website(update, context):
-    update.message.reply_text('https://slavina-flask-proga.herokuapp.com/\n https://clck.ru/UQido', reply_markup=markup)
+    update.message.reply_text('https://slavina-flask-proga.herokuapp.com/', reply_markup=markup)
 
 
 def add_functions(update, context):
@@ -123,9 +124,23 @@ def add_functions(update, context):
 
 
 def christmas_image(update, context):
+    update.message.reply_text('Загружаю картинку...')
     photo = random.choice(img)
+    if not photo:
+        photo = random.choice(img)
     tb.send_photo(update.message.chat_id,
                   photo)
+
+
+def christmas_music(update, context):
+    try:
+        ms = random.choice(dt)
+        update.message.reply_text(f'Идет загрузка\n{ms[:-4]}...')
+        print(f'music/{ms}')
+        mus = open(f'music/{ms}', 'rb')
+        tb.send_document(update.message.chat_id, mus)
+    except Exception as r:
+        update.message.reply_text('ОШИБКА! Попробуйте еще раз! Или чуть похже...')
 
 
 def contacts(update, context):
@@ -330,6 +345,7 @@ def main():
     dp.add_handler(CommandHandler("advice", get_advice))
     dp.add_handler(CommandHandler("download_game", download_game))
     dp.add_handler(CommandHandler("christmas_image", christmas_image))
+    dp.add_handler(CommandHandler("christmas_music", christmas_music))
     dp.add_handler(CommandHandler("yes", yes))
     dp.add_handler(CommandHandler("no", start))
     dp.add_handler(CommandHandler("1", first))
