@@ -24,7 +24,7 @@ reply_keyboard = [['/info'],
                   ['/game_quiz'], ['/add_functions']]
 communication = [['/contacts'], ['/download_game'], ['/back']]
 main_answer = [['/yes'], ['/no']]
-addFunction = [['/christmas_image'], ['/christmas_music'], ['/advice'], ['/back']]
+addFunction = [['/christmas_image'], ['/christmas_music'], ['/advice'], ['/time_untilNY'], ['/back']]
 reply_close_timer = [['/close']]
 choicer = [['/1'], ['/2'], ['/3'], ['/4'], ['/main_window']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
@@ -377,10 +377,13 @@ def fourth(update, context):
             f'А теперь рекорды! \n{out_info}')
 
 
-def time(update, context):
-    today = datetime.datetime.today()
-    update.message.reply_text(
-        today.strftime("%H:%M:%S"))
+def time_untilNY(update, context):
+    now = datetime.datetime.today()
+    NY = datetime.datetime(int(now.year) + 1, 1, 1)
+    d = NY - now
+    mm, ss = divmod(d.seconds, 60)
+    hh, mm = divmod(mm, 60)
+    update.message.reply_text('До нового года: {} дней {} часа {} мин {} сек.'.format(d.days, hh, mm, ss))
 
 
 def date(update, context):
@@ -390,13 +393,6 @@ def date(update, context):
 
 
 def start(update, context):
-    # user = save_user_info(mdb, user, update.effective_user, 10)
-    '''print(user)
-    print(update.effective_user)
-    all_info = list(mdb.users.find({}))
-    print(list(all_info))
-    for i in all_info:
-        print(i["name"])'''
     update.message.reply_text(
         "Я помощник деда мороза. Какая помощь вам нужна?",
         reply_markup=markup
@@ -421,7 +417,7 @@ def main():
     dp.add_handler(CommandHandler("back", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("website", website))
-    dp.add_handler(CommandHandler("date", date))
+    dp.add_handler(CommandHandler("time_untilNY", time_untilNY))
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("contacts", contacts))
     dp.add_handler(CommandHandler("game_quiz", game_quiz))
