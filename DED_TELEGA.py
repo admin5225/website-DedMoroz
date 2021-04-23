@@ -11,6 +11,8 @@ from images.randomIMAGE import img
 from music import dt
 from translate import Translator
 import requests
+import pprint
+from mongodb import mdb, search_or_save_user, save_user_info
 
 tb = telebot.TeleBot(TOKEN)
 due = 0
@@ -313,6 +315,13 @@ def date(update, context):
 
 
 def start(update, context):
+    user = search_or_save_user(mdb, update.effective_user, total)
+    print(user)
+    print(update.effective_user)
+    all_info = list(mdb.users.find({"total": 0}))
+    print(list(all_info))
+    for i in all_info:
+        print(i["name"])
     update.message.reply_text(
         "Я помощник деда мороза. Какая помощь вам нужна?",
         reply_markup=markup
