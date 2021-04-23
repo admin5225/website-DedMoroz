@@ -11,7 +11,6 @@ from images.randomIMAGE import img
 from music import dt
 from translate import Translator
 import requests
-import pprint
 from mongodb import mdb, search_or_save_user, save_user_info
 
 tb = telebot.TeleBot(TOKEN)
@@ -33,65 +32,6 @@ markup_choice = ReplyKeyboardMarkup(choicer, one_time_keyboard=False)
 markup2 = ReplyKeyboardMarkup(communication, one_time_keyboard=False)
 markup3 = ReplyKeyboardMarkup(main_answer, one_time_keyboard=False)
 markup4 = ReplyKeyboardMarkup(reply_close_timer, one_time_keyboard=False)
-
-
-def remove_job_if_exists(name, context):
-    """Удаляем задачу по имени.
-    Возвращаем True если задача была успешно удалена."""
-    current_jobs = context.job_queue.get_jobs_by_name(name)
-    if not current_jobs:
-        return False
-    for job in current_jobs:
-        job.schedule_removal()
-    return True
-
-
-# Обычный обработчик, как и те, которыми мы пользовались раньше.
-def set_timer(update, context):
-    chat_id = update.message.chat_id
-    try:
-        # args[0] должен содержать значение аргумента
-        # (секунды таймера)
-        global due
-        due = int(context.args[0])
-        if due < 0:
-            update.message.reply_text(
-                'Извините, не умеем возвращаться в прошлое')
-            return
-
-        # Добавляем задачу в очередь
-        # и останавливаем предыдущую (если она была)
-        job_removed = remove_job_if_exists(
-            str(chat_id),
-            context
-        )
-        context.job_queue.run_once(
-            task,
-            due,
-            context=chat_id,
-            name=str(chat_id)
-        )
-        text = f'Засек {due} секунд!'
-        if job_removed:
-            text += ' Старая задача удалена.'
-        # Присылаем сообщение о том, что всё получилось.
-        update.message.reply_text(text, reply_markup=markup4)
-
-    except (IndexError, ValueError):
-        update.message.reply_text('Использование: /set_time <секунд>')
-
-
-def task(context):
-    global due
-    job = context.job
-    context.bot.send_message(job.context, text=f'Истекло {due} секунд!', reply_markup=markup3)
-
-
-def unset_timer(update, context):
-    chat_id = update.message.chat_id
-    job_removed = remove_job_if_exists(str(chat_id), context)
-    text = 'Хорошо, таймер сброшен!' if job_removed else 'Нет активного таймера.'
-    update.message.reply_text(text, reply_markup=markup3)
 
 
 def get_advice(update, context):
@@ -122,7 +62,8 @@ def website(update, context):
 
 
 def add_functions(update, context):
-    update.message.reply_text('1)Рандомная фотография с Рождеством!\n2)Рандомный совет на день!',
+    update.message.reply_text('1) Рандомная фотография с Рождеством!\n2) Рандомный совет на день!\n3) Случайный '
+                              'совет!\n 4) Сколько дней до нового года?',
                               reply_markup=markupFUNC)
 
 
@@ -174,10 +115,6 @@ def help(update, context):
         "Я пока не умею помогать... Я только ваше эхо.")
 
 
-def no(update, context):
-    update.message.reply_text("Телефон: +7(495)776-3030")
-
-
 def first(update, context):
     global flag, total
     if flag == 1:
@@ -224,9 +161,9 @@ def first(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!')
+            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}')
         update.message.reply_text(
-            f'А теперь рекорды! \n{out_info}')
+            f'Игра окончена!', reply_markup=reply_keyboard)
 
 
 def second(update, context):
@@ -248,7 +185,7 @@ def second(update, context):
         flag += 1
         total += 1
         update.message.reply_text(
-            "Верно!\nВ Сколько шуб у Деда Мороза?\n1) 1.\n2) 2"
+            "Верно!\nСколько шуб у Деда Мороза?\n1) 1.\n2) 2"
             ""
             "\n3) 3.\n4) 4.", reply_markup=markup_choice)
     elif flag == 9:
@@ -291,9 +228,9 @@ def second(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!')
+            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}')
         update.message.reply_text(
-            f'А теперь рекорды! \n{out_info}')
+            f'Игра окончена!', reply_markup=reply_keyboard)
 
 
 def third(update, context):
@@ -316,6 +253,14 @@ def third(update, context):
         update.message.reply_text(
             "Верно!\nВ какой стране в XVI веке появилась первая елочная игрушка?\n1) Саксония.\n2) Австралия."
             "\n3) Богемия.\n4) Германия.", reply_markup=markup_choice)
+    elif flag == 16:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nЧему равна «сумма» декабря, января и февраля? \n1) Лету. "
+            "\n2) "
+            "Весне. 0"
+            "\n3) Осени.\n4) Зиме.", reply_markup=markup_choice)
     else:
         global user
         user = search_or_save_user(mdb, update.effective_user, total)
@@ -334,9 +279,9 @@ def third(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!')
+            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}')
         update.message.reply_text(
-            f'А теперь рекорды! \n{out_info}')
+            f'Игра окончена!', reply_markup=reply_keyboard)
 
 
 def fourth(update, context):
@@ -354,6 +299,22 @@ def fourth(update, context):
             "Верно!\nКак величали сурового предшественника современного русского Деда Мороза?\n1) Дед Колотун.\n2) "
             "Дед Трескун. "
             "\n3) Дед Вьюговей.\n4) Дед Иван.", reply_markup=markup_choice)
+    elif flag == 17:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nНазовёте «зимний» синоним глагола «поколотить»? \n1) Побить. "
+            "\n2) "
+            "Отмутузить."
+            "\n3) Исколотить.\n4) Отметелить.", reply_markup=markup_choice)
+    elif flag == 18:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКОНЕЦ \n1) Побить. "
+            "\n2) "
+            "Отмутузить."
+            "\n3) Исколотить.\n4) Отметелить.", reply_markup=markup_choice)
     else:
         global user
         user = search_or_save_user(mdb, update.effective_user, total)
@@ -372,9 +333,9 @@ def fourth(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!')
+            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}', reply_markup=markup)
         update.message.reply_text(
-            f'А теперь рекорды! \n{out_info}')
+            f'Игра окончена!', reply_markup=markup)
 
 
 def time_untilNY(update, context):
@@ -384,12 +345,6 @@ def time_untilNY(update, context):
     mm, ss = divmod(d.seconds, 60)
     hh, mm = divmod(mm, 60)
     update.message.reply_text('До нового года: {} дней {} часа {} мин {} сек.'.format(d.days, hh, mm, ss))
-
-
-def date(update, context):
-    today = datetime.datetime.today()
-    update.message.reply_text(
-        today.strftime("%m/%d/%Y"))
 
 
 def start(update, context):
@@ -408,10 +363,7 @@ def close_keyboard(update, context):
 
 def main():
     updater = Updater(TOKEN, use_context=True)
-
-    # Получаем из него диспетчер сообщений.
     dp = updater.dispatcher
-
     updater.start_polling()
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("back", start))
@@ -434,18 +386,8 @@ def main():
     dp.add_handler(CommandHandler("4", fourth))
     dp.add_handler(CommandHandler("main_window", start))
     dp.add_handler(CommandHandler("close_keyboard", close_keyboard))
-    dp.add_handler(CommandHandler("set_time", set_timer,
-                                  pass_args=True,
-                                  pass_job_queue=True,
-                                  pass_chat_data=True))
-    dp.add_handler(CommandHandler("unset", unset_timer,
-                                  pass_chat_data=True))
-
-    # Ждём завершения приложения.
-    # (например, получения сигнала SIG_TERM при нажатии клавиш Ctrl+C)
     updater.idle()
 
 
-# Запускаем функцию main() в случае запуска скрипта.
 if __name__ == '__main__':
     main()
