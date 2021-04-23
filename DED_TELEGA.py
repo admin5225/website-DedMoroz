@@ -18,6 +18,7 @@ tb = telebot.TeleBot(TOKEN)
 due = 0
 flag = 0
 total = 0
+user = ''
 reply_keyboard = [['/info'],
                   ['/website'],
                   ['/game_quiz'], ['/add_functions']]
@@ -160,6 +161,8 @@ def game_quiz(update, context):
 
 def yes(update, context):
     global flag
+    global user
+    user = search_or_save_user(mdb, update.effective_user, total)
     flag = 1
     update.message.reply_text(
         f"Тогда мы НАЧНАЕМ!\nГде живет дед мороз?\n1) На северном полюсе.\n2) На южном полюсе.\n3) В Крыму!\n4) В "
@@ -204,8 +207,26 @@ def first(update, context):
             "отпугнуть. Чем китайцы их отпугивают?\n1) Рисом.\n2) Чаем. "
             "\n3) Петардами.\n4) Волшебными словами.", reply_markup=markup_choice)
     else:
+        global user
+        user = search_or_save_user(mdb, update.effective_user, total)
+        if int(user["total"]) < total:
+            user = save_user_info(mdb, user, update.effective_user, total)
+        all_info = list(mdb.users.find({}))
+        out_info1 = []
+        out_info = []
+        for i in all_info:
+            out_info1.append((i["name"], int(i["total"])))
+        out_info1 = sorted(out_info1, key=lambda x: x[1], reverse=True)
+        k = 0
+        for i in out_info1:
+            k += 1
+            out_info.append(f'{k}) {i[0]} {i[1]}')
+        out_info = "\n".join(out_info)
+        print(list(all_info))
         update.message.reply_text(
-            f"ТЫ не угадал! {total}")
+            f'ТЫ не угадал!')
+        update.message.reply_text(
+            f'А теперь рекорды! \n{out_info}')
 
 
 def second(update, context):
@@ -253,8 +274,26 @@ def second(update, context):
             "Тула. 0"
             "\n3) Великий Устюг.\n4) Оренбург.", reply_markup=markup_choice)
     else:
+        global user
+        user = search_or_save_user(mdb, update.effective_user, total)
+        if int(user["total"]) < total:
+            user = save_user_info(mdb, user, update.effective_user, total)
+        all_info = list(mdb.users.find({}))
+        out_info1 = []
+        out_info = []
+        for i in all_info:
+            out_info1.append((i["name"], int(i["total"])))
+        out_info1 = sorted(out_info1, key=lambda x: x[1], reverse=True)
+        k = 0
+        for i in out_info1:
+            k += 1
+            out_info.append(f'{k}) {i[0]} {i[1]}')
+        out_info = "\n".join(out_info)
+        print(list(all_info))
         update.message.reply_text(
-            f"ТЫ не угадал! {total}")
+            f'ТЫ не угадал!')
+        update.message.reply_text(
+            f'А теперь рекорды! \n{out_info}')
 
 
 def third(update, context):
@@ -278,8 +317,26 @@ def third(update, context):
             "Верно!\nВ какой стране в XVI веке появилась первая елочная игрушка?\n1) Саксония.\n2) Австралия."
             "\n3) Богемия.\n4) Германия.", reply_markup=markup_choice)
     else:
+        global user
+        user = search_or_save_user(mdb, update.effective_user, total)
+        if int(user["total"]) < total:
+            user = save_user_info(mdb, user, update.effective_user, total)
+        all_info = list(mdb.users.find({}))
+        out_info1 = []
+        out_info = []
+        for i in all_info:
+            out_info1.append((i["name"], int(i["total"])))
+        out_info1 = sorted(out_info1, key=lambda x: x[1], reverse=True)
+        k = 0
+        for i in out_info1:
+            k += 1
+            out_info.append(f'{k}) {i[0]} {i[1]}')
+        out_info = "\n".join(out_info)
+        print(list(all_info))
         update.message.reply_text(
-            f"ТЫ не угадал! {total}")
+            f'ТЫ не угадал!')
+        update.message.reply_text(
+            f'А теперь рекорды! \n{out_info}')
 
 
 def fourth(update, context):
@@ -298,8 +355,26 @@ def fourth(update, context):
             "Дед Трескун. "
             "\n3) Дед Вьюговей.\n4) Дед Иван.", reply_markup=markup_choice)
     else:
+        global user
+        user = search_or_save_user(mdb, update.effective_user, total)
+        if int(user["total"]) < total:
+            user = save_user_info(mdb, user, update.effective_user, total)
+        all_info = list(mdb.users.find({}))
+        out_info1 = []
+        out_info = []
+        for i in all_info:
+            out_info1.append((i["name"], int(i["total"])))
+        out_info1 = sorted(out_info1, key=lambda x: x[1], reverse=True)
+        k = 0
+        for i in out_info1:
+            k += 1
+            out_info.append(f'{k}) {i[0]} {i[1]}')
+        out_info = "\n".join(out_info)
+        print(list(all_info))
         update.message.reply_text(
-            f"ТЫ не угадал! {total}")
+            f'ТЫ не угадал!')
+        update.message.reply_text(
+            f'А теперь рекорды! \n{out_info}')
 
 
 def time(update, context):
@@ -315,13 +390,13 @@ def date(update, context):
 
 
 def start(update, context):
-    user = search_or_save_user(mdb, update.effective_user, total)
-    print(user)
+    # user = save_user_info(mdb, user, update.effective_user, 10)
+    '''print(user)
     print(update.effective_user)
-    all_info = list(mdb.users.find({"total": 0}))
+    all_info = list(mdb.users.find({}))
     print(list(all_info))
     for i in all_info:
-        print(i["name"])
+        print(i["name"])'''
     update.message.reply_text(
         "Я помощник деда мороза. Какая помощь вам нужна?",
         reply_markup=markup

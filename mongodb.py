@@ -14,11 +14,6 @@ def search_or_save_user(mdb, effective_user, total):
             "total": total
         }
         mdb.users.insert_one(user)
-    else:
-        mdb.users.update_one(
-            {'username': effective_user.username},
-            {'$set': {'total': total}}
-        )
     return user
 
 
