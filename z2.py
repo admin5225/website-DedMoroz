@@ -15,7 +15,7 @@ def perses():
 
 
 @app.route('/game')
-def game():
+def game():  # игра в переводе с английского
     return render_template('game.html')
 
 
