@@ -38,12 +38,26 @@ def get_advice(update, context):
     response = requests.get('https://api.adviceslip.com/advice')
     data = response.json()
     text = data['slip']['advice']
-
     translator = Translator(to_lang="RU")
     translation = translator.translate(text)
     if 'WARNING' in translation:
-        update.message.reply_text(text,
-                                  reply_markup=markupFUNC)
+        try:
+            tr_url = "https://translated-mymemory---translation-memory.p.rapidapi.com/api/get"
+            lang_pair = "en|ru"
+            headers = {
+                'x-rapidapi-key': "7e5cc6f72fmshd5472477a995ccep10b72cjsnaed447d4c2e9",
+                'x-rapidapi-host': "translated-mymemory---translation-memory.p.rapidapi.com"
+            }
+            querystring = {"q": text, "langpair": lang_pair, "de": "a@b.c", "onlyprivate": "0", "mt": "1"}
+            print(querystring)
+            response = requests.request("GET", tr_url, headers=headers, params=querystring)
+            print(response.json())
+            translation = response.json()['matches'][0]['translation']
+            update.message.reply_text(translation,
+                                      reply_markup=markupFUNC)
+        except Exception as r:
+            update.message.reply_text(text,
+                                      reply_markup=markupFUNC)
     else:
         update.message.reply_text(translation,
                                   reply_markup=markupFUNC)
@@ -143,6 +157,14 @@ def first(update, context):
             "Верно!\nКитайцы считают, что первый день наступившего года окутан злыми духами, которых необходимо "
             "отпугнуть. Чем китайцы их отпугивают?\n1) Рисом.\n2) Чаем. "
             "\n3) Петардами.\n4) Волшебными словами.", reply_markup=markup_choice)
+    elif flag == 29:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКаким образом волк из русской народной сказки «Лиса и волк» ловил рыбу в проруби?\n1) "
+            "Удочкой.\n2) "
+            "Хвостом. "
+            "\n3) Лапой.\n4) Пастью.", reply_markup=markup_choice)
     else:
         global user
         user = search_or_save_user(mdb, update.effective_user, total)
@@ -161,9 +183,11 @@ def first(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}')
+            f'ТЫ не угадал!')
         update.message.reply_text(
-            f'Игра окончена!', reply_markup=reply_keyboard)
+            f'А теперь рекорды! \n{out_info}')
+        update.message.reply_text(
+            f'Игра окончена!', reply_markup=markup)
 
 
 def second(update, context):
@@ -200,7 +224,7 @@ def second(update, context):
         update.message.reply_text(
             "Верно!\nПо указу какого царя датой празднования Нового года на Руси стало 1 января?\n1) Ивана "
             "Грозного.\n2) "
-            "Александра I. 0"
+            "Александра I."
             "\n3) Петра I.\n4) Александра II.", reply_markup=markup_choice)
     elif flag == 15:
         flag += 1
@@ -208,8 +232,42 @@ def second(update, context):
         update.message.reply_text(
             "Верно!\nВ каком городе получил прописку российский Дед Мороз?\n1) Новгород. "
             "\n2) "
-            "Тула. 0"
+            "Тула."
             "\n3) Великий Устюг.\n4) Оренбург.", reply_markup=markup_choice)
+    elif flag == 19:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКто зимой в футболках и платьях, а летом – в шубах?\n1) Человек. "
+            "\n2) "
+            "Заяц."
+            "\n3) Моль.\n4) Медведь.", reply_markup=markup_choice)
+    elif flag == 21:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nЧем запасается российский бурый медведь перед зимним сном?\n1) Вяленой рыбой."
+            "\n2) "
+            "Сушёной малиной."
+            "\n3) Терпением.\n4) Подкожным жиром.", reply_markup=markup_choice)
+    elif flag == 24:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКак называют кактус, который цветет только в зимнее время?\n1) Революционер."
+            "\n2) "
+            "Полярник."
+            "\n3) Декабрист.\n4) Коммунист.", reply_markup=markup_choice)
+    elif flag == 30:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКакое слово нужно было собрать Каю из осколков льда в сказке Г.Х. Андерсена «Снежная королева», "
+            "чтобы стать «самому себе господином», и чтобы получить от королевы «весь свет и пару новых коньков»?\n1) "
+            "Дружба. "
+            "\n2) "
+            "Семья."
+            "\n3) Забота.\n4) Вечность.", reply_markup=markup_choice)
     else:
         global user
         user = search_or_save_user(mdb, update.effective_user, total)
@@ -228,9 +286,11 @@ def second(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}')
+            f'ТЫ не угадал!')
         update.message.reply_text(
-            f'Игра окончена!', reply_markup=reply_keyboard)
+            f'А теперь рекорды! \n{out_info}')
+        update.message.reply_text(
+            f'Игра окончена!', reply_markup=markup)
 
 
 def third(update, context):
@@ -259,8 +319,40 @@ def third(update, context):
         update.message.reply_text(
             "Верно!\nЧему равна «сумма» декабря, января и февраля? \n1) Лету. "
             "\n2) "
-            "Весне. 0"
+            "Весне."
             "\n3) Осени.\n4) Зиме.", reply_markup=markup_choice)
+    elif flag == 20:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКакое из этих животных каждую зиму сбрасывает рога? \n1) Баран. "
+            "\n2) "
+            "Лось."
+            "\n3) Буйвол.\n4) Рогач.", reply_markup=markup_choice)
+    elif flag == 23:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКакой ягодный кустарник НЕ роняет на зиму листья?\n1) Малина. "
+            "\n2) "
+            "Брусника."
+            "\n3) Смородина.\n4) Ежевика.", reply_markup=markup_choice)
+    elif flag == 25:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКаким из слов заканчивается название 1-й симфонии П.И. Чайковского «Зимние…»?\n1) Морозы. "
+            "\n2) "
+            "Праздники."
+            "\n3) Каникулы.\n4) Грёзы.", reply_markup=markup_choice)
+    elif flag == 27:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВ каком из этих зимних видов спорта соревнуются на санях?\n1) Фристайл. "
+            "\n2) "
+            "Биатлон."
+            "\n3) Шорт-трек.\n4) Скелетон.", reply_markup=markup_choice)
     else:
         global user
         user = search_or_save_user(mdb, update.effective_user, total)
@@ -279,9 +371,11 @@ def third(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}')
+            f'ТЫ не угадал!')
         update.message.reply_text(
-            f'Игра окончена!', reply_markup=reply_keyboard)
+            f'А теперь рекорды! \n{out_info}')
+        update.message.reply_text(
+            f'Игра окончена!', reply_markup=markup)
 
 
 def fourth(update, context):
@@ -311,12 +405,60 @@ def fourth(update, context):
         flag += 1
         total += 1
         update.message.reply_text(
-            "Верно!\nКОНЕЦ \n1) Побить. "
+            "Верно!\nВо что впадают зимой некоторые животные?\n1) В детство. "
             "\n2) "
-            "Отмутузить."
-            "\n3) Исколотить.\n4) Отметелить.", reply_markup=markup_choice)
-    else:
+            "В спячку."
+            "\n3) В бешенство.\n4) В беспамятство.", reply_markup=markup_choice)
+    elif flag == 22:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКакой из этих зверей зимой в спячку НЕ впадает?\n1) Бурый медведь. "
+            "\n2) "
+            "Барсук."
+            "\n3) Куница.\n4) Сурок.", reply_markup=markup_choice)
+    elif flag == 26:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nВ каком городе прорыт канал Зимняя канавка?\n1) В Москве. "
+            "\n2) "
+            "В Астрахани."
+            "\n3) В Санкт-Петербурге.\n4) В Волгограде.", reply_markup=markup_choice)
+    elif flag == 28:
+        flag += 1
+        total += 1
+        update.message.reply_text(
+            "Верно!\nКакая из перечисленных птиц средней полосы России НЕ улетает на зимовку?\n1) Щегол. "
+            "\n2) "
+            "Соловей."
+            "\n3) Скворец.\n4) Ласточка.", reply_markup=markup_choice)
+    elif flag == 31:
         global user
+        update.message.reply_text(
+            "Верно!\nТы ответил верно НА ВСЕ ВОПРОСЫ!", reply_markup=markup_choice)
+        update.message.reply_text(
+            f'Игра окончена!', reply_markup=markup)
+        photo = open('images/pers.jpg', 'rb')
+        tb.send_photo(update.message.chat_id,
+                      photo)
+        user = search_or_save_user(mdb, update.effective_user, total)
+        if int(user["total"]) < total:
+            user = save_user_info(mdb, user, update.effective_user, total)
+        all_info = list(mdb.users.find({}))
+        out_info1 = []
+        out_info = []
+        for i in all_info:
+            out_info1.append((i["name"], int(i["total"])))
+        out_info1 = sorted(out_info1, key=lambda x: x[1], reverse=True)
+        k = 0
+        for i in out_info1:
+            k += 1
+            out_info.append(f'{k}) {i[0]} {i[1]}')
+        out_info = "\n".join(out_info)
+        update.message.reply_text(
+            f'Рейтинговая таблица... \n{out_info}')
+    else:
         user = search_or_save_user(mdb, update.effective_user, total)
         if int(user["total"]) < total:
             user = save_user_info(mdb, user, update.effective_user, total)
@@ -333,7 +475,9 @@ def fourth(update, context):
         out_info = "\n".join(out_info)
         print(list(all_info))
         update.message.reply_text(
-            f'ТЫ не угадал!\n\n\nА теперь рекорды! \n{out_info}', reply_markup=markup)
+            f'ТЫ не угадал!')
+        update.message.reply_text(
+            f'А теперь рекорды! \n{out_info}')
         update.message.reply_text(
             f'Игра окончена!', reply_markup=markup)
 
@@ -386,7 +530,7 @@ def main():
     dp.add_handler(CommandHandler("4", fourth))
     dp.add_handler(CommandHandler("main_window", start))
     dp.add_handler(CommandHandler("close_keyboard", close_keyboard))
-    updater.idle()
+    updater.idle()  # не комититься
 
 
 if __name__ == '__main__':
