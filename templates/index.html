@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul>
+        <li><a class="active" href="../index">Главная</a></li>
+        <li><a href="../perses">Персонажи</a></li>
+        <li><a href="../game">Игра</a></li>
+        <li><a href="../users">Пользователи</a></li>
+    </ul>
+
+    <h1>Подвиги Деда Мороза</h1>
+    <div class="video" >
+  <object width="60%" height="600">
+    <param name="movie" value="../static/img/trailer.mp4">
+    <param name="wmode" value="window">
+    <param name="allowFullScreen" value="true">
+    <embed src="../static/img/trailer.mp4" type="application/x-shockwave-flash" wmode="window" allowfullscreen="true" width="700" height="353">
+  </object>
+</div>
+
+{% endblock %}

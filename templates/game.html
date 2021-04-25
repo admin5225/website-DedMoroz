@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul>
+        <li><a href="../index">Главная</a></li>
+        <li><a href="../perses">Персонажи</a></li>
+        <li><a class="active" href="../game">Игра</a></li>
+        <li><a href="../users">Пользователи</a></li>
+    </ul>
+
+    <h1 class="main_text">Об игре</h1>
+
+    <div class="my_carousel">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="../static/img/1.png" class="d-block w-100" alt="1">
+        </div>
+        <div class="carousel-item">
+            <img src="../static/img/2.png" class="d-block w-100" alt="2">
+        </div>
+        <div class="carousel-item">
+            <img src="../static/img/3.png" class="d-block w-100" alt="3">
+        </div>
+        <div class="carousel-item">
+            <img src="../static/img/4.png" class="d-block w-100" alt="3">
+        </div>
+        <div class="carousel-item">
+            <img src="../static/img/5.png" class="d-block w-100" alt="3">
+        </div>
+        <div class="carousel-item">
+            <img src="../static/img/6.png" class="d-block w-100" alt="3">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Предыдущий</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Следующий</span>
+    </button>
+</div>
+</div>
+
+    <div class="game-info">
+        <h3>В целом о сюжете:</h3>
+        <p>
+            Дед Мороз шёл далеко далеко, за тридевять земель, чтобы подарить подарки маленьким детишкам.<br>
+            Но тут случается беда! Он падает с обрыва и теряет все свои вещи. Помоги любимому Дедушке Морозу<br>
+            найти подарки и дойти до детишек. Тебе предстоит встретиться с волшебными хитрыми коробками и трудностью<br>
+            сурового климата отдалённых мест. <br>Вперёд к приключениям!
+        </p>
+    </div>
+
+    <div class="download-block">
+        <a class="btn btn-success" role="button" aria-pressed="true" href="https://drive.google.com/file/d/1p7WP_IQxA8gcWTFt_n5Ah6V_HGm5ApIA/view">Скачать игру</a>
+    </div>
+
+{% endblock %}
