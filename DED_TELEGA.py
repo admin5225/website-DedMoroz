@@ -19,22 +19,31 @@ flag = 0
 total = 0
 user = ''
 reply_keyboard = [['/info'],
-                  ['/website'],
                   ['/game_quiz'], ['/add_functions']]
-communication = [['/contacts'], ['/download_game'], ['/back']]
+communication = [['/contacts'], ['/website'], ['/download_game'], ['/back']]
 main_answer = [['/yes'], ['/no']]
-addFunction = [['/christmas_image'], ['/christmas_music'], ['/advice'], ['/time_untilNY'], ['/back']]
+addFunction = [['/christmas_art'], ['/advice'], ['/time_untilNY'],
+               ['/back']]
+ART = [['/christmas_image'], ['/christmas_music'],
+       ['/back_to']]
 reply_close_timer = [['/close']]
 choicer = [['/1'], ['/2'], ['/3'], ['/4'], ['/main_window']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
 markupFUNC = ReplyKeyboardMarkup(addFunction, one_time_keyboard=False)
-markup_choice = ReplyKeyboardMarkup(choicer, one_time_keyboard=False)
+markupART = ReplyKeyboardMarkup(ART, one_time_keyboard=False)
+markup_choice = ReplyKeyboardMarkup(choicer, one_time_keyboard=False, resize_keyboard=True)
 markup2 = ReplyKeyboardMarkup(communication, one_time_keyboard=False)
 markup3 = ReplyKeyboardMarkup(main_answer, one_time_keyboard=False)
 markup4 = ReplyKeyboardMarkup(reply_close_timer, one_time_keyboard=False)
 
 
+def christmas_art(update, context):
+    update.message.reply_text(f'1) Случайная рождественская картинка.\n2) Случайная рождественская Музыка.',
+                              reply_markup=markupART)
+
+
 def get_advice(update, context):
+    update.message.reply_text("Подгружаю совет...")
     response = requests.get('https://api.adviceslip.com/advice')
     data = response.json()
     text = data['slip']['advice']
@@ -64,7 +73,14 @@ def get_advice(update, context):
 
 
 def info(update, context):
-    update.message.reply_text('ИГРА ГОДА 2021!', reply_markup=markup2)
+    update.message.reply_text('Игра платформер с видом сбоку. С большим количеством персонажей и с '
+                              'проработанным главным героем.\nКоротко о сюжете.\nДед Мороз шёл далеко далеко, '
+                              'за тридевять земель, '
+                              ' чтобы подарить подарки маленьким детишкам.\nНо тут случается беда! Он падает с '
+                              'обрыва и теряет все свои вещи.\n Помогите любимому Дедушке Морозу найти подарки и'
+                              ' дойти до'
+                              ' детишек.\n Вам предстоит встретиться с волшебными хитрыми коробками и трудностями '
+                              'сурового климата отдалённых мест.', reply_markup=markup2)
 
 
 def download_game(update, context):
@@ -72,12 +88,13 @@ def download_game(update, context):
 
 
 def website(update, context):
-    update.message.reply_text('https://slavina-flask-proga.herokuapp.com/', reply_markup=markup)
+    update.message.reply_text('Наш сайт: https://slavina-flask-proga.herokuapp.com/', reply_markup=markup2)
 
 
 def add_functions(update, context):
-    update.message.reply_text('1) Рандомная фотография с Рождеством!\n2) Рандомный совет на день!\n3) Случайный '
-                              'совет!\n 4) Сколько дней до нового года?',
+    update.message.reply_text('1) Рандомная картинка или музыка с Рождеством!\n2) Рандомный совет на день!\n3) '
+                              'Случайный '
+                              'совет!\n4) Сколько дней до нового года?',
                               reply_markup=markupFUNC)
 
 
@@ -93,7 +110,7 @@ def christmas_image(update, context):
 def christmas_music(update, context):
     try:
         ms = random.choice(dt)
-        update.message.reply_text(f'Идет загрузка\n{ms[:-4]}...')
+        update.message.reply_text(f'Идет загрузка...\n{ms[:-4]}...')
         print(f'music/{ms}')
         mus = open(f'music/{ms}', 'rb')
         tb.send_document(update.message.chat_id, mus)
@@ -126,7 +143,7 @@ def yes(update, context):
 
 def help(update, context):
     update.message.reply_text(
-        "Я пока не умею помогать... Я только ваше эхо.")
+        "Если что-то пошло не так пропишите или нажмите /start.")
 
 
 def first(update, context):
@@ -492,8 +509,25 @@ def time_untilNY(update, context):
 
 
 def start(update, context):
+    name = update.effective_user["first_name"]
+    print(name)
     update.message.reply_text(
-        "Я помощник деда мороза. Какая помощь вам нужна?",
+        f"Здраствуйте, {name}. Я помощник деда мороза. Чем могу помочь?\n\n/info - раздел с кратким описанием "
+        f"игры, контактами и ссылкой на сайт и на скачивание игры.\n\n/game_quez - мини игра "
+        f"викторина.\n\n/add_functions "
+        f"- второстепенные умения бота.\n(рандомная новогодня картинка, музыка, случайный совет и счетчик времени до"
+        f" НГ.)",
+        reply_markup=markup
+    )
+
+
+def menu(update, context):
+    update.message.reply_text(
+        f"Чем могу помочь?\n\n/info - раздел с кратким описанием "
+        f"игры, контактами и ссылкой на сайт и на скачивание игры.\n\n/game_quez - мини игра "
+        f"викторина.\n\n/add_functions "
+        f"- второстепенные умения бота.\n(рандомная новогодня картинка, музыка, случайный совет и счетчик времени до"
+        f" НГ.)",
         reply_markup=markup
     )
 
@@ -510,7 +544,7 @@ def main():
     dp = updater.dispatcher
     updater.start_polling()
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("back", start))
+    dp.add_handler(CommandHandler("back", menu))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("website", website))
     dp.add_handler(CommandHandler("time_untilNY", time_untilNY))
@@ -518,17 +552,19 @@ def main():
     dp.add_handler(CommandHandler("contacts", contacts))
     dp.add_handler(CommandHandler("game_quiz", game_quiz))
     dp.add_handler(CommandHandler("add_functions", add_functions))
+    dp.add_handler(CommandHandler("christmas_art", christmas_art))
+    dp.add_handler(CommandHandler("back_to", add_functions))
     dp.add_handler(CommandHandler("advice", get_advice))
     dp.add_handler(CommandHandler("download_game", download_game))
     dp.add_handler(CommandHandler("christmas_image", christmas_image))
     dp.add_handler(CommandHandler("christmas_music", christmas_music))
     dp.add_handler(CommandHandler("yes", yes))
-    dp.add_handler(CommandHandler("no", start))
+    dp.add_handler(CommandHandler("no", menu))
     dp.add_handler(CommandHandler("1", first))
     dp.add_handler(CommandHandler("2", second))
     dp.add_handler(CommandHandler("3", third))
     dp.add_handler(CommandHandler("4", fourth))
-    dp.add_handler(CommandHandler("main_window", start))
+    dp.add_handler(CommandHandler("main_window", menu))
     dp.add_handler(CommandHandler("close_keyboard", close_keyboard))
     updater.idle()  # не комититься
 
