@@ -68,7 +68,7 @@ def info(update, context):
 
 
 def download_game(update, context):
-    update.message.reply_text('https://clck.ru/UQido')
+    update.message.reply_text('Ссылка на архив - https://clck.ru/UQido \nСсылка на установщик - https://clck.ru/UUtYt')
 
 
 def website(update, context):
