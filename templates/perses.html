@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul>
+        <li><a href="../index">Главная</a></li>
+        <li><a class="active" href="../perses">Персонажи</a></li>
+        <li><a href="../game">Игра</a></li>
+        <li><a href="../users">Пользователи</a></li>
+    </ul>
+
+    <h1 class="main_text">Наши персонажи</h1>
+    <div class="persons_bloc">
+    <div class="pers1">
+    <h2 class="bot1" >Дед Мороз</h2>
+    <img class="bot" src="../static/img/ded.png">
+</div>
+    <div class="pers2">
+    <h2 class="bot2" >Коробочка</h2>
+    <img class="bot" src="../static/img/pers.png">
+</div>
+</div>
+{% endblock %}
