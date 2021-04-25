@@ -31,10 +31,6 @@ pymongo==3.11.3
 PyMsgBox==1.0.7
 pynput==1.7.2
 pyperclip==1.8.1
-PyQt5==5.15.1
-pyqt5-plugins==5.15.1.1
-PyQt5-sip==12.8.1
-pyqt5-tools==5.15.1.2
 PyRect==0.1.4
 PyScreeze==0.1.26
 python-dotenv==0.15.0
