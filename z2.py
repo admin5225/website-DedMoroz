@@ -23,8 +23,9 @@ def game():
 @app.route('/users')
 def users():
     all_info = list(mdb.users.find({}))
-    print(all_info)
-    return render_template('users.html', info=all_info)
+    all_info = list(sorted(all_info, key=lambda el: el['total'], reverse=True))
+    len_ = len(all_info)
+    return render_template('users.html', info=all_info, len=len_)
 
 
 if __name__ == '__main__':

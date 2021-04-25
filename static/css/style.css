@@ -145,6 +145,8 @@ table {
     border-spacing: 0;
     text-align: center;
     margin-left: 40%;
+    margin-top: 100px;
+    margin-bottom: 200px;
 }
 th {
     background: #BCEBDD;
