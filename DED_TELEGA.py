@@ -13,12 +13,12 @@ from translate import Translator
 import requests
 from mongodb import mdb, search_or_save_user, save_user_info
 
-tb = telebot.TeleBot(TOKEN)
+tb = telebot.TeleBot(TOKEN)  # некоторые константы
 due = 0
 flag = 0
 total = 0
 user = ''
-reply_keyboard = [['/info'],
+reply_keyboard = [['/info'],        # кнопки в поле клавиатуры
                   ['/game_quiz'], ['/add_functions']]
 communication = [['/contacts'], ['/website'], ['/download_game'], ['/back']]
 main_answer = [['/yes'], ['/no']]
@@ -28,7 +28,7 @@ ART = [['/christmas_image'], ['/christmas_music'],
        ['/back_to']]
 reply_close_timer = [['/close']]
 choicer = [['/1'], ['/2'], ['/3'], ['/4'], ['/main_window']]
-markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
+markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)   # обработчики кнопок
 markupFUNC = ReplyKeyboardMarkup(addFunction, one_time_keyboard=False)
 markupART = ReplyKeyboardMarkup(ART, one_time_keyboard=False)
 markup_choice = ReplyKeyboardMarkup(choicer, one_time_keyboard=False, resize_keyboard=True)
@@ -37,19 +37,19 @@ markup3 = ReplyKeyboardMarkup(main_answer, one_time_keyboard=False)
 markup4 = ReplyKeyboardMarkup(reply_close_timer, one_time_keyboard=False)
 
 
-def christmas_art(update, context):
+def christmas_art(update, context):  # подменю с выбором что получить - музыку или картинку
     update.message.reply_text(f'1) Случайная рождественская картинка.\n2) Случайная рождественская Музыка.',
                               reply_markup=markupART)
 
 
-def get_advice(update, context):
-    update.message.reply_text("Подгружаю совет...")
-    response = requests.get('https://api.adviceslip.com/advice')
+def get_advice(update, context):        # получение совета через апи ( на английском )
+    update.message.reply_text("Подгружаю совет...")     # а затем перевод через библиотеку
+    response = requests.get('https://api.adviceslip.com/advice')    # если лимит на слова в бибблиотеке исчерпан
     data = response.json()
     text = data['slip']['advice']
     translator = Translator(to_lang="RU")
     translation = translator.translate(text)
-    if 'WARNING' in translation:
+    if 'WARNING' in translation:        # тогда перевод через апи
         try:
             tr_url = "https://translated-mymemory---translation-memory.p.rapidapi.com/api/get"
             lang_pair = "en|ru"
@@ -66,13 +66,13 @@ def get_advice(update, context):
                                       reply_markup=markupFUNC)
         except Exception as r:
             update.message.reply_text(text,
-                                      reply_markup=markupFUNC)
-    else:
+                                      reply_markup=markupFUNC)      # если по какой-то причине перевод не удался
+    else:       # тогда будет вывод на английском
         update.message.reply_text(translation,
                                   reply_markup=markupFUNC)
 
 
-def info(update, context):
+def info(update, context):  # краткое описание нашей основной игры и открытия кнопок подменю
     update.message.reply_text('Игра платформер с видом сбоку. С большим количеством персонажей и с '
                               'проработанным главным героем.\nКоротко о сюжете.\nДед Мороз шёл далеко далеко, '
                               'за тридевять земель, '
@@ -83,30 +83,34 @@ def info(update, context):
                               'сурового климата отдалённых мест.', reply_markup=markup2)
 
 
-def download_game(update, context):
+def download_game(update, context):     # кидаем ссылку по которым можно скачать игру
     update.message.reply_text('Ссылка на архив - https://clck.ru/UQido \nСсылка на установщик - https://clck.ru/UVGK2')
 
 
-def website(update, context):
-    update.message.reply_text('Наш сайт: https://clck.ru/UWG6a', reply_markup=markup2)
+def website(update, context):       # ссылка на наш рабочий сайт, можно посмотреть трейл, увидить рейтинговую таблицу
+    update.message.reply_text('Наш сайт: https://clck.ru/UWG6a', reply_markup=markup2)      # вновь почитать о
+    # персонажах и т.д.
 
 
-def add_functions(update, context):
+def add_functions(update, context):     # очередное подменю с описанием кнопок
     update.message.reply_text('1) Рандомная картинка или музыка с Рождеством!\n2) Случайный совет на день!\n3) '
                               'Сколько дней до нового года?',
                               reply_markup=markupFUNC)
 
 
-def christmas_image(update, context):
-    update.message.reply_text('Загружаю картинку...')
-    photo = random.choice(img)
-    if not photo:
+def christmas_image(update, context):   # получение картинки из списка
+    try:
+        update.message.reply_text('Загружаю картинку...')
         photo = random.choice(img)
-    tb.send_photo(update.message.chat_id,
-                  photo)
+        if not photo:
+            photo = random.choice(img)
+        tb.send_photo(update.message.chat_id,
+                      photo)
+    except Exception as r:
+        update.message.reply_text('ОШИБКА! Попробуйте еще раз! Или чуть позже...')
 
 
-def christmas_music(update, context):
+def christmas_music(update, context):   # получение названия песни из списка и открытие ее из папки
     try:
         ms = random.choice(dt)
         update.message.reply_text(f'Идет загрузка...\n{ms[:-4]}...')
@@ -114,10 +118,10 @@ def christmas_music(update, context):
         mus = open(f'music/{ms}', 'rb')
         tb.send_document(update.message.chat_id, mus)
     except Exception as r:
-        update.message.reply_text('ОШИБКА! Попробуйте еще раз! Или чуть похже...')
+        update.message.reply_text('ОШИБКА! Попробуйте еще раз! Или чуть позже...')
 
 
-def contacts(update, context):
+def contacts(update, context):      # послание наших аватаров и ссылок на телеграм
     photo = 'https://i.pinimg.com/originals/d0/8f/0a/d08f0a9a93af07aa14a710fb3bc92f4d.jpg'
     tb.send_photo(update.message.chat_id,
                   photo)
@@ -129,13 +133,13 @@ def contacts(update, context):
     update.message.reply_text(f"@pasha882")
 
 
-def game_quiz(update, context):
+def game_quiz(update, context):     # предложение сыграть в викторину
     update.message.reply_text(
         f"Хочешь сыграть в викторину?", reply_markup=markup3)
 
 
-def yes(update, context):
-    global flag
+def yes(update, context):       # если ответ да, тогда мы создаем пользователя в БД и задаем ему 0 очков
+    global flag                 # а если он уже был, тогда просто находим его и работаем с ним дальше
     global user
     user = search_or_save_user(mdb, update.effective_user, total)
     print(update.effective_user)
@@ -145,14 +149,14 @@ def yes(update, context):
         f"Солотче!", reply_markup=markup_choice)
 
 
-def help(update, context):
+def help(update, context):      # это так чтоб было, если что-то пойдет не так и человек инстиктно напишет /help
     update.message.reply_text(
         "Если что-то пошло не так пропишите или нажмите /start.")
 
 
-def first(update, context):
-    global flag, total
-    if flag == 1:
+def first(update, context):     # обработчик первой кнопки. затем проверку по номеру вопроса, если у этой кнопки есть
+    global flag, total      # маркер на этот вопрос, тогда задается следующий и начисляются баллы
+    if flag == 1:       # аналогично и в других 3 кнопках выбора ответа
         flag += 1
         total += 1
         update.message.reply_text(
@@ -191,15 +195,15 @@ def first(update, context):
             "Хвостом. "
             "\n3) Лапой.\n4) Пастью.", reply_markup=markup_choice)
     else:
-        global user
-        user = search_or_save_user(mdb, update.effective_user, total)
+        global user     # когда человек отвечает неверно, мы находим его в БД и смотрим на его баллы, если баллы увели-
+        user = search_or_save_user(mdb, update.effective_user, total)       # чились, тогда они обновляются
         if int(user["total"]) < total:
             user = save_user_info(mdb, user, update.effective_user, total)
         all_info = list(mdb.users.find({}))
         out_info1 = []
         out_info = []
-        for i in all_info:
-            out_info1.append((i["name"], int(i["total"])))
+        for i in all_info:                                          # затем идет получения всей информации о всех пользо
+            out_info1.append((i["name"], int(i["total"])))          # вателях, сортивка и вывод
         out_info1 = sorted(out_info1, key=lambda x: x[1], reverse=True)
         k = 0
         for i in out_info1:
@@ -471,9 +475,9 @@ def fourth(update, context):
             "Соловей."
             "\n3) Скворец.\n4) Ласточка.", reply_markup=markup_choice)
     elif flag == 31:
-        global user
+        global user         # это уникальный момент, здесь отвечены все вопросы, отправляется поздровительная картинка
         update.message.reply_text(
-            "Верно!\nТы ответил верно НА ВСЕ ВОПРОСЫ!", reply_markup=markup_choice)
+            "Верно!\nТы ответил верно НА ВСЕ ВОПРОСЫ!", reply_markup=markup_choice)     # и вывод рейтинга
         update.message.reply_text(
             f'Игра окончена!', reply_markup=markup)
         photo = open('images/pers.jpg', 'rb')
@@ -497,6 +501,7 @@ def fourth(update, context):
             f'Твой счет: {total}.\n')
         update.message.reply_text(
             f'Рейтинговая таблица... \n{out_info}')
+        total = 0
     else:
         user = search_or_save_user(mdb, update.effective_user, total)
         if int(user["total"]) < total:
@@ -522,7 +527,7 @@ def fourth(update, context):
             f'Игра окончена!', reply_markup=markup)
 
 
-def time_untilNY(update, context):
+def time_untilNY(update, context):      # через дататайм считаем время но НГ
     now = datetime.datetime.today()
     NY = datetime.datetime(int(now.year) + 1, 1, 1)
     d = NY - now
@@ -531,7 +536,7 @@ def time_untilNY(update, context):
     update.message.reply_text('До нового года: {} дней {} часа {} мин {} сек.'.format(d.days, hh, mm, ss))
 
 
-def start(update, context):
+def start(update, context):     # здороваемся и рассказываем о командах
     name = update.effective_user["first_name"]
     print(name)
     update.message.reply_text(
@@ -544,7 +549,7 @@ def start(update, context):
     )
 
 
-def menu(update, context):
+def menu(update, context):      # при возвращении в главное меню, напоминаем о командах
     update.message.reply_text(
         f"Чем могу помочь?\n\n/info - раздел с кратким описанием "
         f"игры, контактами и ссылкой на сайт и на скачивание игры.\n\n/game_quez - мини игра "
@@ -555,17 +560,10 @@ def menu(update, context):
     )
 
 
-def close_keyboard(update, context):
-    update.message.reply_text(
-        "Ok",
-        reply_markup=ReplyKeyboardRemove()
-    )
-
-
 def main():
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
-    updater.start_polling()
+    updater.start_polling()                         # обработчики команд и запуск соответсвующих функций
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("back", menu))
     dp.add_handler(CommandHandler("help", help))
@@ -588,8 +586,7 @@ def main():
     dp.add_handler(CommandHandler("3", third))
     dp.add_handler(CommandHandler("4", fourth))
     dp.add_handler(CommandHandler("main_window", menu))
-    dp.add_handler(CommandHandler("close_keyboard", close_keyboard))
-    updater.idle()  # не комититься
+    updater.idle()  # спасибо за внимание
 
 
 if __name__ == '__main__':
