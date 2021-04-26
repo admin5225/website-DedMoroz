@@ -1,0 +1,184 @@
+body {
+    background: #F7CCFF;
+}
+
+h1 {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    color: #FF00FF;
+    text-align: center;
+    text-shadow: 0px 3px 0px #b2a98f, 0px 14px 10px rgba(0,0,0,0.15), 0px 24px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)
+}
+
+h3 {
+    font-family: Сomic Sans MS;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial Black;
+}
+
+li {
+  float: left;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+footer {
+    height: 400px;
+    background: #FF9A0A
+}
+
+.footer_widget {
+    padding-left: 100px;
+    padding-top: 70px;
+    color: #D2006B
+}
+
+.copywriting_text {
+    margin-bottom: 50px;
+}
+
+h2.bot1 {
+    margin-left: 150px;
+    font-family: Сomic Sans MS;
+    color: #FFC05C
+}
+
+h2.bot2 {
+    margin-left: 400px;
+    font-family: Сomic Sans MS;
+    color: #FFC05C
+}
+
+.pers1 {
+    width: 1000px;
+    margin-left: 35%;
+    padding-top: 50px;
+}
+
+.pers2 {
+    margin-top: 100px;
+    width: 1000px;
+    margin-left: 20%;
+}
+
+.persons_bloc {
+    background: #FA9084;
+    width: 80%;
+    margin-left: 10%;
+    margin-bottom: 100px
+}
+
+.main_text {
+    margin-bottom: 80px;
+    color: #9370DB;
+    font-family: Impact;
+}
+
+.video_bloc {
+    background: #FFCAA3;
+    height: 800px;
+    width: 80%;
+    margin-left: 10%;
+    margin-bottom: 200px
+}
+
+.video_text {
+    color: #E6503C;
+    font-family: Arial Black;
+    padding-top: 80px;
+    text-align: center
+}
+
+.video {
+    margin-top: 150px;
+    margin-bottom: 200px;
+    text-align: center
+}
+
+.game-info {
+    width: 60%;
+    margin-left: 20%;
+    background: #DDA0DD;
+}
+
+.download-block {
+    width: 60%;
+    margin-left: 20%;
+    margin-top: 50px;
+}
+
+.carousel,
+.carousel-inner,
+.carousel-inner .item
+.carousel-inner img {
+  height: 600px;
+  width: 70%;
+  margin-left: 15%;
+  padding-top: 10px;
+}
+
+table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 14px;
+    border-radius: 10px;
+    border-spacing: 0;
+    text-align: center;
+    margin-left: 40%;
+    margin-top: 100px;
+    margin-bottom: 200px;
+}
+th {
+    background: #BCEBDD;
+    color: white;
+    text-shadow: 0 1px 1px #2D2020;
+    padding: 10px 20px;
+}
+th, td {
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    border-color: white;
+}
+th:first-child, td:first-child {
+    text-align: left;
+}
+th:first-child {
+    border-top-left-radius: 10px;
+}
+th:last-child {
+    border-top-right-radius: 10px;
+    border-right: none;
+}
+td {
+    padding: 10px 20px;
+    background: #F8E391;
+}
+tr:last-child td:first-child {
+    border-radius: 0 0 0 10px;
+}
+tr:last-child td:last-child {
+    border-radius: 0 0 10px 0;
+}
+tr td:last-child {
+    border-right: none;
+}

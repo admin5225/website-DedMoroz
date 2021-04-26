@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul>
+        <li><a href="../index">Главная</a></li>
+        <li><a href="../perses">Персонажи</a></li>
+        <li><a href="../game">Игра</a></li>
+        <li><a class="active" href="../users">Пользователи</a></li>
+    </ul>
+
+    <h1 class="main_text">Наши любимые пользователи</h1>
+
+
+    <table>
+        <tr>
+            <th>Место</th><th>Имя</th><th>Кол-во очков</th>
+        </tr> <!--ряд с ячейками заголовков-->
+        {% for i in range(len) %}
+            <tr>
+                <td>{{i + 1}}</td><td>{{info[i]['name']}}</td><td>{{info[i]['total']}}</td>
+            </tr> <!--ряд с ячейками тела таблицы-->
+        {% endfor %}
+    </table>
+
+{% endblock %}
